@@ -1,3 +1,6 @@
+"use client"; // Ensure this runs only on the client side
+
+import { useEffect } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -11,13 +14,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
-export const metadata = {
-  title: "My PWA",
-  description: "A Progressive Web App built with Next.js",
+// Service Worker Registration
+const registerServiceWorker = () => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker registered with scope:", registration.scope);
+      })
+      .catch((error) => {
+        console.error("Service Worker registration failed:", error);
+      });
+  }
 };
 
 export default function RootLayout({ children }) {
+  useEffect(() => {
+    registerServiceWorker();
+  }, []);
+
   return (
     <html lang="en">
       <head>
