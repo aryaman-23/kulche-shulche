@@ -2,6 +2,7 @@ const CACHE_NAME = 'kulche-shulche-v1';
 
 const URLS_CACHE_ONLY = [
   "/",
+  "/test"
 ];
 
 const URLS_OVER_NETWORK_WITH_CACHE_FALLBACK = [
