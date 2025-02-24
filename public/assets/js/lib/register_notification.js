@@ -3,14 +3,14 @@
 // const tokenString = document.getElementById("token");
 
 const config = {
-    apiKey: "AIzaSyBH37KmuYK9pcIJHbdpsut9J4kEbgnxw2Y",
-    authDomain: "booking-solution-4e734.firebaseapp.com",
-    projectId: "booking-solution-4e734",
-    storageBucket: "booking-solution-4e734.appspot.com",
-    messagingSenderId: "1019676334736",
-    appId: "1:1019676334736:web:4ee5d6a97ae2b43dc01615"
+    apiKey: "AIzaSyB9A8qGrIDT328e0OK5g3thSUF51Y7SRM4",
+    authDomain: "kulcheshulche-92e55.firebaseapp.com",
+    projectId: "kulcheshulche-92e55",
+    storageBucket: "kulcheshulche-92e55.firebasestorage.app",
+    messagingSenderId: "1088058662400",
+    appId: "1:1088058662400:web:a03456a4fb41c6dc2902e5"
 };
-
+// Private Key : HQOIa7cUiutQUTGy984SbnUeQH5Oh70deEGkXx9T19Q
 firebase.initializeApp(config);
 
 const messaging = firebase.messaging();

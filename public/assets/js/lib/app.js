@@ -29,20 +29,20 @@ function displayNotification() {
 
 
 
-if ("serviceWorker" in navigator) {
+// if ("serviceWorker" in navigator) {
 
-    navigator.serviceWorker.register("service-worker.js")
-        .then(function(registration) {
-            sw = registration;
-            console.log("Service Worker registered with scope:",
-                registration.scope);
+//     navigator.serviceWorker.register("service-worker.js")
+//         .then(function(registration) {
+//             sw = registration;
+//             console.log("Service Worker registered with scope:",
+//                 registration.scope);
 
 
-        }).catch(function(err) {
-            alert('Service Worker registration Failed, Please Check Console for detail information');
-            console.log("Service worker registration failed:", err);
-        });
-}
+//         }).catch(function(err) {
+//             alert('Service Worker registration Failed, Please Check Console for detail information');
+//             console.log("Service worker registration failed:", err);
+//         });
+// }
 
 if ('PushManager' in window) {
     console.log('Service Workers Push Notification is supported');
