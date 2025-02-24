@@ -1,7 +1,55 @@
+import { definedTables } from '@/constant';
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Login() {
+    const router = useRouter();
+
+    //deprecate window logic and takle tables from sheet
+    const [totalTables, setTotalTables] = useState(() => {
+        if (typeof window !== 'undefined') {
+          return [...definedTables, ...(window.newTablesAdded || [])];
+        }
+        return definedTables;
+    });
+
+    const [addTable, setAddTable] = useState({
+        tableNo: null, 
+        place: null
+    })
+
+    useEffect(() => {
+        window.newTablesAdded = [];
+        setTotalTables([...definedTables, ...(window.newTablesAdded || [])]);
+    }, []);
+
+    const setAddDineTableNo = (event) => {
+        setAddTable((prev) => ({
+            ...prev,
+            tableNo: event.target.value,
+        }));
+    };
+
+    const setAddDineTablePlace = (event) => {
+        setAddTable((prev) => ({
+            ...prev,
+            place: event.target.value,
+        }));
+    };
+
+    const setNewtableDetails = () => {
+        window.newTablesAdded = [
+            ...(window.newTablesAdded || []),
+            { tableNo: addTable.tableNo, place: addTable.place }
+        ];
+        setTotalTables([...definedTables, ...(window.newTablesAdded || [])]);
+    };
+
+    const openPetpoojaOrderForTable = (tableNo) => {
+        router.replace(`https://dinein.petpooja.com/qr/qik3svjnhf/${tableNo}`);
+    }
+
     useEffect(() => {
         // Load necessary JS files dynamically
         const script1 = document.createElement('script');
@@ -26,11 +74,11 @@ export default function Login() {
         document.body.appendChild(script4);
 
         return () => {
-            // Cleanup the scripts when the component unmounts
-            document.body.removeChild(script1);
-            document.body.removeChild(script2);
-            document.body.removeChild(script3);
-            document.body.removeChild(script4);
+            [script1, script2, script3, script4].forEach(script => {
+                if (document.body.contains(script)) {
+                    document.body.removeChild(script);
+                }
+            });
         };
     }, []);
 
@@ -51,6 +99,7 @@ export default function Login() {
                 <link rel="manifest" href="manifest.json" />
             </Head>
 
+            <div style={{ margin: "10px"}}>
             <div id="loader">
                 <img src="/assets/img/loading-icon.png" alt="icon" className="loading-icon" />
             </div>
@@ -84,15 +133,14 @@ export default function Login() {
                                         <label class="label">Table Number</label>
                                         <div class="input-group">
                                             <span class="input-group-text" id="basic-addon1">#</span>
-                                            <input type="text" class="form-control" placeholder="Enter table number" value="1"/>
+                                            <input type="text" class="form-control" placeholder="Enter table number" value={addTable.tableNo} onChange={setAddDineTableNo}/>
+                                            <input type="text" class="form-control" placeholder="Enter table place" value={addTable.place} onChange={setAddDineTablePlace}/>
                                         </div>
                                         <div class="input-info">Enter the Number of the table you want to add.</div>
                                     </div>
-
-
                                     <div class="form-group basic">
                                         <button type="button" class="btn btn-primary btn-block btn-lg"
-                                            data-bs-dismiss="modal">Add</button>
+                                            data-bs-dismiss="modal" onClick={setNewtableDetails}>Add</button>
                                     </div>
                                 </form>
 
@@ -105,26 +153,15 @@ export default function Login() {
             {/* Main Area */}
             <div id="appCapsule">
                 <div class="row">
-                    <div class="col-4 mb-2">
-                        <div class="bill-box">
-                            <div class="img-wrapper">
-                                <img src="assets/img/sample/brand/1.jpg" alt="img" class="image-block imaged w48" />
+                    {totalTables.map(table => {
+                        return <div class="col-4 mb-2">
+                            <div class="bill-box">
+                                <div class="price">{table.tableNo}</div>
+                                <p>{table.place}</p>
+                                <a href="#" class="btn btn-primary btn-block btn-sm" style={{ padding: "10px"}} onClick={() => openPetpoojaOrderForTable(table.tableNo)}>Add Order</a>
                             </div>
-                            <div class="price">Table1</div>
-                            <p>Table Description : G.Floor/F.Floor/Top Floor</p>
-                            <a href="#" class="btn btn-primary btn-block btn-sm">Add Order</a>
                         </div>
-                    </div>
-                    <div class="col-4 mb-2">
-                        <div class="bill-box">
-                            <div class="img-wrapper">
-                                <img src="assets/img/sample/brand/1.jpg" alt="img" class="image-block imaged w48" />
-                            </div>
-                            <div class="price">Table1</div>
-                            <p>Table Description : G.Floor/F.Floor/Top Floor</p>
-                            <a href="#" class="btn btn-primary btn-block btn-sm">Add Order</a>
-                        </div>
-                    </div>
+                    })}
                 </div>
             </div>
             {/* * Main Area */}
@@ -162,6 +199,7 @@ export default function Login() {
                 </a>
             </div>
             {/* <!-- * App Bottom Menu --> */}
+            </div>
         </>
     );
 }
